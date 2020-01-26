@@ -1,0 +1,56 @@
+name: Test, Build, and Deploy 
+
+on: [push]
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v1
+
+    - name: Get npm cache directory
+      id: npm-cache
+      run: |
+        echo "::set-output name=dir::$(npm config get cache)"
+
+    - uses: actions/cache@v1
+      with:
+        path: ${{ steps.npm-cache.outputs.dir }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: install node
+      uses: actions/setup-node@v1
+
+    - name: install npm deps
+      run: npm ci
+
+    - name: build for release 
+      run: npm run build 
+
+    - name: upload artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: build 
+        path: build 
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: bundle
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v1
+
+    - name: download artifacts
+      uses: actions/download-artifact@master
+      with:
+        name: build 
+        path: build 
+
+    - name: deploy to gh_pages
+      uses: maxheld83/ghpages@master
+      env:
+        BUILD_DIR: "build/"
+        GH_PAT: ${{ secrets.GH_PAT }}
