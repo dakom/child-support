@@ -1,4 +1,5 @@
 import React, {useReducer} from 'react';
+import { nDays } from './constants';
 import {Percentage, DirectDay, DirectMonth} from "./widgets";
 import {Report} from "./report";
 import {reducer} from "./reducer";
@@ -64,6 +65,7 @@ export const App = () => {
                     <b>Holidays&nbsp;</b>
                     have a variety of overlap with shabbat and it changes based on both the parents schedule and holiday cycle of that year. 
                     Instead of analyzing a decade of exact projections, we make an approximation by removing 6 from the ~30 possible "holiday expense days" and then the rest "fall" on regular school days.
+                    We also average the months to be 30 instead of 29.5 days - so there is a bit of extra holiday expense each month.
                     It is not perfect, but the difference is ultimately negligable.
                     <br/>
                 </p>
@@ -71,10 +73,10 @@ export const App = () => {
                     <b>Exact breakdown&nbsp;</b>
                     per month then becomes:
                     <ul>
-                        <li>4 shabbats</li>
-                        <li>4 sundays (non-work days)</li>
-                        <li>20 regular schooldays</li>
-                        <li>2 chagim</li>
+                        <li>{nDays.shabbat} shabbats</li>
+                        <li>{nDays.sunday} sundays (non-work days)</li>
+                        <li>{nDays.regular} regular schooldays</li>
+                        <li>{nDays.chagim} chagim</li>
                         <li>room is expense to both parents</li>
                         <li>clothing and medicine are only expense to mother (paid by father)</li>
                     </ul>

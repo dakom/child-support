@@ -53,10 +53,9 @@ input:not([type=submit]):not([type=file]) {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 10px;
   justify-items: center;
+  grid-gap: 10px;
 }
 
-.inputs > section {
-}
 
 .percentage > .label,
 .direct > .label {
@@ -84,4 +83,12 @@ input:not([type=submit]):not([type=file]) {
 
 .report .smaller {
   font-size: smaller;
+}
+
+.report .left {
+  text-align: left;
+}
+
+li.nobullet {
+  list-style: none;
 }

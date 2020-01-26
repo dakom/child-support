@@ -1,4 +1,5 @@
 import React, { Dispatch } from 'react';
+import { nDays } from './constants';
 import { directive } from "@babel/types";
 
 
@@ -6,38 +7,73 @@ interface ReportProps {
     state: State;
 }
 
+type ValidIndex = 0 | 1;
+
 export const Report = ({state}:ReportProps) => {
 
-    const getCommonExpenses = (index:0 | 1):number => { 
-        const getDayExpense = (percLabel: keyof State["percentages"], expensesLabel:keyof State["expensesPerDay"]) => {
-            const perc = state.percentages[percLabel][index];
-            const expense = state.expensesPerDay[expensesLabel];
+    const getPerc = (index:ValidIndex) => (label:keyof State["percentages"]) => 
+        (state.percentages[label][index])/100;
 
-            return expense * (perc/100);
-        }
 
-        //4 shabbats in a month
-        const shabbat = 4 * getDayExpense("shabbat", "shabbat");
-        //4 sundays in a month
-        const sunday = 4 * getDayExpense("sunday", "school");
-        //16 regular non-work schooldays in a month
-        const school = 20 * getDayExpense("regular", "school");
-        //2 chagim in a month
-        const chagim = 2 * getDayExpense("chagim", "chagim");
+    const getDayExpense = (index:ValidIndex) => (percLabel: keyof State["percentages"], expensesLabel:keyof State["expensesPerDay"]) => {
+        const expense = state.expensesPerDay[expensesLabel];
+        return nDays[percLabel] * (getPerc(index) (percLabel) * expense); 
+    }
+    const getShabbat = (index:ValidIndex):number => 
+        getDayExpense (index) ("shabbat", "shabbat");
+    
+    const getSunday = (index:ValidIndex):number => 
+        getDayExpense (index) ("sunday", "school");
 
+    const getRegular = (index:ValidIndex):number => 
+        getDayExpense (index) ("regular", "school");
+
+    const getChagim = (index:ValidIndex):number => 
+        getDayExpense (index) ("chagim", "chagim");
+
+    const getRoom = (index:ValidIndex):number =>
         //room is identical for both parents
-        const room = state.expensesPerMonth.room;
+        state.expensesPerMonth.room;
 
-        return shabbat + sunday + school + chagim + room;
+    const getClothing= (index:ValidIndex):number =>
+        //clothing is only mother's expense
+        index == 0 ? state.expensesPerMonth.clothing : 0;
+
+    const getMedicine= (index:ValidIndex):number =>
+        //medicine is only mother's expense
+        index == 0 ? state.expensesPerMonth.medicine : 0;
+
+    const getTotalExpenses = (index:ValidIndex):number => { 
+        return getShabbat(index) 
+            + getSunday(index) 
+            + getRegular(index)
+            + getChagim(index)
+            + getRoom(index)
+            + getClothing(index)
+            + getMedicine(index);
     }
 
-    const getAdditionalMotherExpenses = ():number => {
-        return state.expensesPerMonth.clothing + state.expensesPerMonth.medicine;
+    const motherExpenses = getTotalExpenses(0);
+    const fatherExpenses = getTotalExpenses(1);
+
+    const makeBreakdown = (index:ValidIndex) => {
+        const shabbatDays = getPerc (index) ("shabbat") * nDays.shabbat;
+        const sundayDays = getPerc (index) ("sunday") * nDays.sunday;
+        const regularDays = getPerc (index) ("regular") * nDays.regular;
+        const chagimDays = getPerc (index) ("chagim") * nDays.chagim;
+        return (
+            <ul>
+                <li>{shabbatDays} shabbats: {getShabbat(index)} NIS</li>
+                <li>{sundayDays} sundays (non-work days): {getSunday(index)} NIS</li>
+                <li>{regularDays} regular schooldays: {getRegular(index)} NIS</li>
+                <li>{chagimDays} chagim: {getChagim(index)} NIS</li>
+                <li>room: {getRoom(index)} NIS</li>
+                <li>clothing: {getClothing(index)} NIS</li>
+                <li>medicine: {getMedicine(index)} NIS</li>
+                <li className="nobullet"><div className="result left">total: {getTotalExpenses(index)}</div></li>
+            </ul>
+        );
     }
-
-    const motherExpenses = getCommonExpenses(0) + getAdditionalMotherExpenses();
-    const fatherExpenses = getCommonExpenses(1);
-
     return (
         <div className="report">
             <div className="finalResult">
@@ -51,8 +87,12 @@ export const Report = ({state}:ReportProps) => {
             <div className="smaller">
                 <div className="label">He actually spends a total of</div>
                 <div className="result">{fatherExpenses + motherExpenses} NIS</div>
-                <div className="label">Due to the above plus direct expenses of</div>
-                <div className="result">{fatherExpenses} NIS</div>
+                <hr/>
+                <div className="label">Mother's breakdown:</div>
+                {makeBreakdown(0)}
+                <hr/>
+                <div className="label">Father's breakdown:</div>
+                {makeBreakdown(1)}
             </div>
         </div>
     )
