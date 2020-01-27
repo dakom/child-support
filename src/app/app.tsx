@@ -22,11 +22,13 @@ export const App = () => {
                 <Percentage id="sunday" label="Sunday (non-work day)" state={state} dispatch={dispatch} />
                 <Percentage id="regular" label="Regular work/school day" state={state} dispatch={dispatch} />
                 <Percentage id="chagim" label="Chagim" state={state} dispatch={dispatch} />
+                <Percentage id="schoolVacation" label="School Vacation" state={state} dispatch={dispatch} />
                 <hr/>
                 <header>Children's Expenses Per Day<br/><i>in shekels</i></header>
                 <DirectDay id="shabbat" label="Shabbat" state={state} dispatch={dispatch} />
                 <DirectDay id="school" label="Regular School Days" state={state} dispatch={dispatch} />
                 <DirectDay id="chagim" label="Chagim" state={state} dispatch={dispatch} />
+                <DirectDay id="schoolVacation" label="School Vacation" state={state} dispatch={dispatch} />
                 <hr/>
                 <header>Children's Expenses Per Month<br/><i>in shekels</i></header>
                 <DirectMonth id="room" label="House Rental (additional room)" state={state} dispatch={dispatch} />
@@ -62,26 +64,34 @@ export const App = () => {
                     <br/>
                 </p>
                 <p>
-                    <b>Holidays&nbsp;</b>
+                    <b>Chagim&nbsp;</b>
                     have a variety of overlap with shabbat and it changes based on both the parents schedule and holiday cycle of that year. 
                     Instead of analyzing a decade of exact projections, we make an approximation by removing 6 from the ~30 possible "holiday expense days" and then the rest "fall" on regular school days.
-                    We also average the months to be 30 instead of 29.5 days - so there is a bit of extra holiday expense each month.
+                    These 24 days are divided over 12 months yielding 2 holidays that replace regular school days each month
                     It is not perfect, but the difference is ultimately negligable.
                     <br/>
                 </p>
                 <p>
-                    <b>Exact breakdown&nbsp;</b>
-                    per month then becomes:
-                    <ul>
-                        <li>{nDays.shabbat} shabbats</li>
-                        <li>{nDays.sunday} sundays (non-work days)</li>
-                        <li>{nDays.regular} regular schooldays</li>
-                        <li>{nDays.chagim} chagim</li>
-                        <li>room is expense to both parents</li>
-                        <li>clothing and medicine are only expense to mother (paid by father)</li>
-                    </ul>
+                    <b>School vacation&nbsp;</b>
+                    is similar to chagim. However, chagim are also work holidays - and school vacation is not, hence it may be divided differently for schedule purposes.
+                    We assume around 72 children's school vacation days that are not also work holidays (for example summer and the week leading up to pesach).
+                    8 of these are definitely shabbat (e.g. the summer). Another 4 are removed due to falling on shabbat in the year. 
+                    This leaves us with a final number of 60 vacation days to account for, divided over 12 months gives us 5 per month.
                     <br/>
                 </p>
+                <p>&nbsp;</p>
+                <b>Exact breakdown&nbsp;</b>
+                per month then becomes:
+                <ul>
+                    <li>{nDays.shabbat} shabbats</li>
+                    <li>{nDays.sunday} sundays (non-work days)</li>
+                    <li>{nDays.regular} regular schooldays</li>
+                    <li>{nDays.chagim} chagim</li>
+                    <li>{nDays.schoolVacation} school vacation</li>
+                    <li>room is expense to both parents</li>
+                    <li>clothing and medicine are only expense to mother (paid by father)</li>
+                </ul>
+                <br/>
             </section>
         </div>
         </div>

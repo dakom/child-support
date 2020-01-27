@@ -1,6 +1,5 @@
 import * as L from "partial.lenses";
 import React, { Dispatch } from 'react';
-import { directive } from "@babel/types";
 
 
 interface PercentageProps {

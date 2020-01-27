@@ -1,6 +1,5 @@
-import React, { Dispatch } from 'react';
+import React from 'react';
 import { nDays } from './constants';
-import { directive } from "@babel/types";
 
 
 interface ReportProps {
@@ -31,23 +30,27 @@ export const Report = ({state}:ReportProps) => {
     const getChagim = (index:ValidIndex):number => 
         getDayExpense (index) ("chagim", "chagim");
 
+    const getSchoolVacation = (index:ValidIndex):number => 
+        getDayExpense (index) ("schoolVacation", "schoolVacation");
+
     const getRoom = (index:ValidIndex):number =>
         //room is identical for both parents
         state.expensesPerMonth.room;
 
     const getClothing= (index:ValidIndex):number =>
         //clothing is only mother's expense
-        index == 0 ? state.expensesPerMonth.clothing : 0;
+        index === 0 ? state.expensesPerMonth.clothing : 0;
 
     const getMedicine= (index:ValidIndex):number =>
         //medicine is only mother's expense
-        index == 0 ? state.expensesPerMonth.medicine : 0;
+        index === 0 ? state.expensesPerMonth.medicine : 0;
 
     const getTotalExpenses = (index:ValidIndex):number => { 
         return getShabbat(index) 
             + getSunday(index) 
             + getRegular(index)
             + getChagim(index)
+            + getSchoolVacation(index)
             + getRoom(index)
             + getClothing(index)
             + getMedicine(index);
@@ -61,12 +64,14 @@ export const Report = ({state}:ReportProps) => {
         const sundayDays = getPerc (index) ("sunday") * nDays.sunday;
         const regularDays = getPerc (index) ("regular") * nDays.regular;
         const chagimDays = getPerc (index) ("chagim") * nDays.chagim;
+        const schoolVacationDays = getPerc (index) ("schoolVacation") * nDays.schoolVacation;
         return (
             <ul>
                 <li>{shabbatDays} shabbats: {getShabbat(index)} NIS</li>
                 <li>{sundayDays} sundays (non-work days): {getSunday(index)} NIS</li>
                 <li>{regularDays} regular schooldays: {getRegular(index)} NIS</li>
                 <li>{chagimDays} chagim: {getChagim(index)} NIS</li>
+                <li>{schoolVacationDays} school vacation: {getSchoolVacation(index)} NIS</li>
                 <li>room: {getRoom(index)} NIS</li>
                 <li>clothing: {getClothing(index)} NIS</li>
                 <li>medicine: {getMedicine(index)} NIS</li>

@@ -16,13 +16,15 @@ interface State {
         shabbat: Percentage 
         sunday: Percentage 
         regular: Percentage 
-        chagim: Percentage 
+        chagim: Percentage
+        schoolVacation: Percentage
     }
 
     expensesPerDay: {
         shabbat: number,
         school: number,
         chagim: number,
+        schoolVacation: number,
     }
 
     expensesPerMonth: {
