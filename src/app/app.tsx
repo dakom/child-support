@@ -81,7 +81,11 @@ export const App = () => {
                     This leaves us with a final number of 60 vacation days to account for, divided over 12 months gives us 5 per month.
                     <br/>
                 </p>
-                <p>&nbsp;</p>
+                <p>
+                    <b>Final amount&nbsp;</b>
+                    is the complete expenses for the children and should be considered an <i>upper bound</i>. For example it does not include government subsidies or tax returns which could be considered a reduction on top of this.
+                    <br/>
+                </p>
                 <b>Exact breakdown&nbsp;</b>
                 per month then becomes:
                 <ul>
