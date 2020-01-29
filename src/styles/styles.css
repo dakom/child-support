@@ -29,7 +29,7 @@ header > i {
   font-size: .7em; 
 }
 
-a {
+a, .permalink {
   color: #61dafb;
 }
 
@@ -91,4 +91,11 @@ input:not([type=submit]):not([type=file]) {
 
 li.nobullet {
   list-style: none;
+}
+
+.permalink {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  cursor: pointer;
 }

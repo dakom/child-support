@@ -3,18 +3,19 @@ import { nDays } from './constants';
 import {Percentage, DirectDay, DirectMonth} from "./widgets";
 import {Report} from "./report";
 import {reducer} from "./reducer";
-import {initialState} from "./state";
+import {getInitialState} from "./state";
+import {Permalink} from "./permalink";
 
 export const App = () => {
 
-    const [state, dispatch] = useReducer(reducer, initialState);
-
+    const [state, dispatch] = useReducer(reducer, getInitialState());
 
     return (
         <div className="App">
         <header>
             David's child support calculator
         </header>
+        <Permalink state={state} />
         <div className="inputs">
             <section> 
                 <header>Parent's Schedule Split<br/><i>in percentages of Mother / Father</i></header>
@@ -50,6 +51,7 @@ export const App = () => {
                 <p>
                     <b>All expenses&nbsp;</b>
                     are in terms of <i>necessities</i>. While the parents may agree on "extras" beyond the scope of this calculator, they are not obligatory.
+                    Each day should consider the necessary expenses specifically for that day (primarily food and travel).
                     <br/>
                 </p>
                 <p>
